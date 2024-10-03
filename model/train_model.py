@@ -1,13 +1,13 @@
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 import pandas as pd
-import joblib
+import pickle
 import sys
 import os
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from config_params import MODEL_PATH, DATA_PATH
-from pipeline.data_preprocess import HeartDataPreprocessor
+from config_params import MODEL_PATH, DATA_PATH, RANDOM_SEED
+from pipeline.data_handling import HeartDataPreprocessor, HeartDataLoader
 
 
 class HeartModelTrainer:
@@ -17,7 +17,7 @@ class HeartModelTrainer:
     def __init__(self, X: pd.DataFrame = None, y: pd.Series = None):
         self.X: pd.DataFrame = pd.DataFrame()
         self.y: pd.Series = pd.Series()
-        self.model: RandomForestClassifier() = RandomForestClassifier()
+        self.model: RandomForestClassifier() = RandomForestClassifier(random_state=RANDOM_SEED)
         self.last_data_size: int = 0
         if X is not None and y is not None:
             self.add_data(X, y)
@@ -45,7 +45,7 @@ class HeartModelTrainer:
             return
 
         # Split data
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=RANDOM_SEED)
 
         # Train
         self.model.fit(X_train, y_train)
@@ -55,7 +55,7 @@ class HeartModelTrainer:
         print(f"Model Accuracy: {score}")
 
     def save_last_model(self, path: str):
-        joblib.dump(self.model, path)
+        pickle.dump(self.model, open(path, 'wb'))
 
 
 if __name__ == "__main__":
@@ -66,8 +66,13 @@ if __name__ == "__main__":
     relative_model_path: str = os.path.join(script_dir, '..', MODEL_PATH)
 
     # Load data
+    heart_data: pd.DataFrame = HeartDataLoader.from_csv(relative_data_path)
+
+    # Create data pre-processor
     heart_data_preprocessor: HeartDataPreprocessor = HeartDataPreprocessor()
-    X, y = heart_data_preprocessor.load_and_preprocess(relative_data_path)
+
+    # Preprocess
+    X, y = heart_data_preprocessor.preprocess(heart_data)
 
     # Create trainer and train
     random_forest_trainer: HeartModelTrainer = HeartModelTrainer(X=X, y=y)
@@ -75,3 +80,5 @@ if __name__ == "__main__":
 
     # Save model
     random_forest_trainer.save_last_model(relative_model_path)
+
+
