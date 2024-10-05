@@ -15,7 +15,7 @@ from pipeline.data_preprocessor import Datapreprocessor
 from pipeline.data_loader import DataLoader
 
 
-class HeartPredictionTrainer:
+class RandomForestTrainer:
 
     """Class to train a random forest to predict heart disease outcome"""
 
@@ -104,7 +104,7 @@ if __name__ == "__main__":
     y: pd.Series = heart_data['target']
 
     # Create trainer and train
-    random_forest_trainer: HeartPredictionTrainer = HeartPredictionTrainer(X=X, y=y)
+    random_forest_trainer: RandomForestTrainer = RandomForestTrainer(X=X, y=y)
     random_forest_trainer.train()
 
     # Save model
