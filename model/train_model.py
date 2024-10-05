@@ -17,24 +17,41 @@ from pipeline.data_loader import DataLoader
 
 class RandomForestTrainer:
 
-    """Class to train a random forest to predict heart disease outcome"""
+    """
+    A class to train a Random Forest model to predict heart disease outcomes.
 
-    TRAIN_TEST_SPLIT: int = 0.2
+    Class allows  user to incrementally add data for training, handle missing values,
+    scale features, and train a Random Forest classifier using a pipeline. It supports data
+    addition, removal of the last added batch, model training, and saving the trained model.
 
-    def __init__(self, X: pd.DataFrame = None, y: pd.Series = None):
+    Attributes:
+    -----------
+    X (pd.DataFrame): features
+    y (pd.Series): targets
+    pipeline (Pipeline): A scikit-learn pipeline for preprocessing and model training.
+    last_data_size (int): Tracks the size of the last batch of added data to help removal.
+    random_seed (int): a random seed
+    """
+
+    TRAIN_TEST_SPLIT: float = 0.2
+
+    def __init__(self, X: pd.DataFrame = None, y: pd.Series = None, random_seed: int = RANDOM_SEED):
 
         # Store all added data
         self.X: pd.DataFrame = pd.DataFrame()
         self.y: pd.Series = pd.Series()
 
-        # Generate column transformer to deal with missing data etc
+        # Generate column transformer to deal with missing data values, we add this to the pipeline before training
         imputer: ColumnTransformer = ImputationPipeline.create()
 
-        # Create a pipeline including min-max scaler and random forest
+        # Random seed
+        self.random_seed = random_seed
+
+        # Create a pipeline including imputation, min-max scaling and random forest
         self.pipeline = Pipeline([
             ('impute', imputer),
             ('scale', MinMaxScaler()),
-            ('rf', RandomForestClassifier(random_state=RANDOM_SEED))
+            ('rf', RandomForestClassifier(random_state=self.random_seed))
         ])
 
         # Keeping track of added data
@@ -44,10 +61,10 @@ class RandomForestTrainer:
 
     def add_data(self, X_new: pd.DataFrame, y_new: pd.Series):
         """
-        Add data to be trained on
+        Add data to the trainer
          Parameters:
-                    X (pd.DataFrame): features
-                    y (pd.DataFrame): target
+                    X_new (pd.DataFrame): features
+                    y_new (pd.DataFrame): target
         """
         self.X = pd.concat([self.X, X_new], ignore_index=True)
         self.y = pd.concat([self.y, y_new], ignore_index=True)
@@ -60,6 +77,8 @@ class RandomForestTrainer:
         if self.last_data_size != 0:
             self.X = self.X.iloc[:-self.last_data_size]
             self.y = self.y.iloc[:-self.last_data_size]
+            print(f"Removed last {self.last_data_size} entries.")
+            self.last_data_size = 0
         else:
             print(f"Nothing to remove")
 
@@ -68,21 +87,32 @@ class RandomForestTrainer:
         Train the heart model on loaded data
         """
 
-        if len(self.X) == 0:
+        if len(self.X) == 0 or len(self.y) == 0:
             print("Add data to train")
             return
 
         # Split data
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=RANDOM_SEED)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=self.random_seed)
 
-        # Train
+        # Train and evaluate
         self.pipeline.fit(X_train, y_train)
+        self.evaluate_model(X_test, y_test)
 
-        # Evaluate the model (optional, you can use various metrics like accuracy, precision, etc.)
+    def evaluate_model(self, X_test, y_test):
+        """
+            Evaluate the model
+        """
+
         score = self.pipeline.score(X_test, y_test)
         print(f"Model Accuracy: {score}")
 
-    def save_last_model(self, path: str):
+    def save_model(self, path: str):
+        """
+           Save the model pipeline.
+            Parameters:
+                    path (str): Save to here
+        """
+
         pickle.dump(self.pipeline, open(path, 'wb'))
 
 
@@ -108,6 +138,6 @@ if __name__ == "__main__":
     random_forest_trainer.train()
 
     # Save model
-    random_forest_trainer.save_last_model(relative_model_path)
+    random_forest_trainer.save_model(relative_model_path)
 
 
