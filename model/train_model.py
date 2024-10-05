@@ -6,7 +6,7 @@ import sys
 import os
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from config_params import MODEL_PATH, DATA_PATH, RANDOM_SEED
+from config_params import MODEL_SAVE_PATH, DATA_PATH, RANDOM_SEED
 from pipeline.data_handling import HeartDataPreprocessor, HeartDataLoader
 
 
@@ -63,7 +63,7 @@ if __name__ == "__main__":
     # Get correct paths
     script_dir = os.path.dirname(os.path.abspath(__file__))
     relative_data_path: str = os.path.join(script_dir, '..', DATA_PATH)
-    relative_model_path: str = os.path.join(script_dir, '..', MODEL_PATH)
+    relative_model_path: str = os.path.join(script_dir, '..', MODEL_SAVE_PATH)
 
     # Load data
     heart_data: pd.DataFrame = HeartDataLoader.from_csv(relative_data_path)
