@@ -25,7 +25,7 @@ Prepare the dataset: Ensure that the training data (`patient_heart_data.csv`) is
 
 Run the script to train the model:
 ```commandline
-python pipeline/train_model.py
+python model/train_model.py
 ```
 This will preprocess the data and train the classification model.
 Save the model: The trained model will be saved in the model/ directory for future use.
