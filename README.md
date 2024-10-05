@@ -18,7 +18,6 @@ cd mf-prototype-pipeline
 Install dependencies:
 ```commandline
 pip install -r requirements.txt
-Model Training
 ```
 
 ### Training: 
