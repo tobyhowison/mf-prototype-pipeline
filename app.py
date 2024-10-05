@@ -44,10 +44,10 @@ input_data = pd.DataFrame({
 if st.button('Evaluate'):
 
     # Make prediction
-    prediction = model.predict(input_data)
+    prediction = model.predict(input_data)[0]
 
     # Display
     if prediction == 1:
-        st.write(f'Prediction {prediction} (patient is likely to have heart disease.)')
+        st.write(f'Prediction value: {prediction}    (patient is likely to have heart disease.)')
     else:
-        st.write(f'Prediction {prediction} (patient is unlikely to have heart disease.)')
+        st.write(f'Prediction value: {prediction}    (patient is unlikely to have heart disease.)')
