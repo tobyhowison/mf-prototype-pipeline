@@ -1,25 +1,8 @@
 from sklearn.impute import SimpleImputer
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
-
-CATEGORICAL_FEATURES: list[str] = [
-    'age',
-    'sex',
-    'chest pain type',
-    'fasting blood sugar',
-    'resting ECG',
-    'exang',
-    'slope',
-    'number vessels flourosopy',
-    'thal'
-]
-CONTINUOUS_FEATURES: list[str] = [
-    'resting blood pressure',
-    'chol',
-    'max heart rate',
-    'oldpeak']
-CATEGORICAL_IMPUTATION_STRATEGY: str = 'most_frequent'
-CONTINUOUS_IMPUTATION_STRATEGY: str = 'mean'
+from config_params import CATEGORICAL_FEATURES, CONTINUOUS_FEATURES, CATEGORICAL_IMPUTATION_STRATEGY, \
+    CONTINUOUS_IMPUTATION_STRATEGY
 
 
 class ImputationPipeline:

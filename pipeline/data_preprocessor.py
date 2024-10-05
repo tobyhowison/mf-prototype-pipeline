@@ -1,17 +1,10 @@
 import numpy as np
 import pandas as pd
+from config_params import CONTINUOUS_REALISTIC_LIMITS
 
 
 class Datapreprocessor:
     """A class with some static methods for general data preprocessing tasks specific to our dataset"""
-
-    CONTINUOUS_REALISTIC_LIMITS: dict[str, tuple[int, int]] = {
-        'age': (0, 125),
-        'resting blood pressure': (0, 250),
-        'chol': (0, 600),
-        'max_heart_rate': (50, 250),
-        'oldpeak': (0, 10),
-    }
 
     @staticmethod
     def drop_missing_targets(df: pd.DataFrame) -> pd.DataFrame:
@@ -48,7 +41,7 @@ class Datapreprocessor:
           Parameters:
                     df (pd.DataFrame): Input data
         """
-        for feature_name, (min_val, max_val) in Datapreprocessor.CONTINUOUS_REALISTIC_LIMITS.items():
+        for feature_name, (min_val, max_val) in CONTINUOUS_REALISTIC_LIMITS.items():
             if feature_name in df.columns:
                 out_of_bounds = (df[feature_name] < min_val) | (df[feature_name] > max_val)
                 if out_of_bounds.any():
