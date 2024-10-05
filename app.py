@@ -1,10 +1,10 @@
 import streamlit as st
 import pickle
 import pandas as pd
-from config_params import PRETRAINED_MODEL_PATH
+from config_params import MODEL_SAVE_PATH
 
 # Load pretrained model
-model = pickle.load(open(PRETRAINED_MODEL_PATH , 'rb'))
+model = pickle.load(open(MODEL_SAVE_PATH , 'rb'))
 
 # Title
 st.title('Heart Disease Prediction App')
