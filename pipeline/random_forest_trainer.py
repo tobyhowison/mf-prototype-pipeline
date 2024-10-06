@@ -37,8 +37,8 @@ class RandomForestTrainer:
     def __init__(self, X: pd.DataFrame = None, y: pd.Series = None, random_seed: int = RANDOM_SEED):
 
         # Store all added data
-        self.X: pd.DataFrame = pd.DataFrame()
-        self.y: pd.Series = pd.Series()
+        self._X: pd.DataFrame = pd.DataFrame()
+        self._y: pd.Series = pd.Series()
 
         # Generate column transformer to deal with missing data values, we add this to the pipeline before training
         imputer: ColumnTransformer = ImputationPipeline.create()
@@ -58,6 +58,14 @@ class RandomForestTrainer:
         if X is not None and y is not None:
             self.add_data(X, y)
 
+    @property
+    def X(self):
+        return self._X
+
+    @property
+    def y(self):
+        return self._y
+
     def add_data(self, X_new: pd.DataFrame, y_new: pd.Series):
         """
         Add data to the trainer
@@ -65,8 +73,8 @@ class RandomForestTrainer:
                     X_new (pd.DataFrame): features
                     y_new (pd.DataFrame): target
         """
-        self.X = pd.concat([self.X, X_new], ignore_index=True)
-        self.y = pd.concat([self.y, y_new], ignore_index=True)
+        self._X = pd.concat([self._X, X_new], ignore_index=True)
+        self._y = pd.concat([self._y, y_new], ignore_index=True)
         self.last_data_size = len(y_new)
 
     def remove_last(self):
@@ -74,8 +82,8 @@ class RandomForestTrainer:
         Remove last added data.
         """
         if self.last_data_size != 0:
-            self.X = self.X.iloc[:-self.last_data_size]
-            self.y = self.y.iloc[:-self.last_data_size]
+            self._X = self._X.iloc[:-self.last_data_size]
+            self._y = self._y.iloc[:-self.last_data_size]
             print(f"Removed last {self.last_data_size} entries.")
             self.last_data_size = 0
         else:
@@ -86,12 +94,12 @@ class RandomForestTrainer:
         Train the heart model on loaded data
         """
 
-        if len(self.X) == 0 or len(self.y) == 0:
+        if len(self._X) == 0 or len(self._y) == 0:
             print("Add data to train")
             return
 
         # Split data
-        X_train, X_test, y_train, y_test = train_test_split(self.X, self.y, test_size=0.2, random_state=self.random_seed)
+        X_train, X_test, y_train, y_test = train_test_split(self._X, self._y, test_size=0.2, random_state=self.random_seed)
 
         # Train and evaluate
         self.pipeline.fit(X_train, y_train)
