@@ -70,6 +70,12 @@ gcloud run deploy --image gcr.io/[YOUR GCP PROJECT ID]/heart-prediction-model --
 Access deployed model, e.g.
 https://heart-prediction-model-796115071536.europe-north1.run.app
 
+### Testing
+Run the tests, currently very basic
+```commandline
+pytest tests/  
+```
+
 ### Project Structure
 
 * `app.py`: Main application file (Streamlit app).
