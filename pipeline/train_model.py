@@ -15,7 +15,7 @@ if __name__ == "__main__":
     # Get correct paths
     script_dir = os.path.dirname(os.path.abspath(__file__))
     relative_data_path: str = os.path.join(script_dir, '..', DATA_PATH)
-    relative_model_path: str = os.path.join(script_dir, '..', MODEL_SAVE_PATH)
+    relative_model_save_path: str = os.path.join(script_dir, '..', MODEL_SAVE_PATH)
 
     # Load data
     heart_data: pd.DataFrame = DataLoader.from_file(relative_data_path)
@@ -32,4 +32,4 @@ if __name__ == "__main__":
     random_forest_trainer.train()
 
     # Save model
-    random_forest_trainer.save_model(relative_model_path)
+    random_forest_trainer.save_model(relative_model_save_path)
