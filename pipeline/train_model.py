@@ -8,8 +8,6 @@ from pipeline.data_preprocessor import Datapreprocessor
 from pipeline.random_forest_trainer import RandomForestTrainer
 from pipeline.data_loader import DataLoader
 
-
-
 if __name__ == "__main__":
 
     # Get correct paths

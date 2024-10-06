@@ -3,6 +3,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 import pandas as pd
 import pickle
 import sys
@@ -98,11 +99,19 @@ class RandomForestTrainer:
 
     def evaluate_model(self, X_test, y_test):
         """
-            Evaluate the model
+            Evaluate the model with various metrics
         """
 
-        score = self.pipeline.score(X_test, y_test)
-        print(f"Model Accuracy: {score}")
+        y_pred = self.pipeline.predict(X_test)
+        accuracy = accuracy_score(y_test, y_pred)
+        precision = precision_score(y_test, y_pred, average='binary')
+        recall = recall_score(y_test, y_pred, average='binary')
+        f1 = f1_score(y_test, y_pred, average='binary')
+
+        print(f"Accuracy: {accuracy}")
+        print(f"Precision: {precision}")
+        print(f"Recall: {recall}")
+        print(f"F1-Score: {f1}")
 
     def save_model(self, path: str):
         """

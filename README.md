@@ -77,3 +77,15 @@ https://heart-prediction-model-796115071536.europe-north1.run.app
 * `model/: Model saves here
 * `pipeline/`: Pipeline classes.
 * `data/`: Dataset storage.
+
+### Questions for the client
+* What does -99.99 mean in oldpeak
+* Realistic ranges for various features
+
+### Future improvements
+* Documentation: improve documentation.
+* CI/CD Integration: Implement continuous integration (CI) with automated testing and deployment (e.g., GitHub Actions).
+* Cloud Deployment: Add a pipeline for deploying to GCP or similar.
+* Model Testing: Introduce unit and integration tests for the pipeline.
+* Parameter Tuning: Include hyperparameter tuning and model versioning.
+* API Integration: Provide an API for making predictions.
