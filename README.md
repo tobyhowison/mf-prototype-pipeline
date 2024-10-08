@@ -95,3 +95,4 @@ pytest tests/
 * Model Testing: Introduce unit and integration tests for the pipeline.
 * Parameter Tuning: Include hyperparameter tuning and model versioning.
 * API Integration: Provide an API for making predictions.
+* Data Ingestion: check for class imbalances
